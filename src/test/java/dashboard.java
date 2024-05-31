@@ -100,7 +100,7 @@ public class dashboard {
     }
 
     @Test
-    public void verifyThatNewBookingsIsOpen(){
+    public static void verifyThatNewBookingsIsOpen(){
         driver.findElement(By.xpath("/html/body/div[1]/aside/div/nav/ul/li[1]/ul/li[7]/a/p")).click();
         WebElement newBookings = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[1]/div/div/div[1]/h6"));
         String expectedNewBooking = newBookings.getText();

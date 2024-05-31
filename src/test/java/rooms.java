@@ -3,18 +3,25 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import pages.AmenitiesPage;
 import pages.LoginPage;
 import pages.RoomPage;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
+import static pages.RoomPage.roomStatus;
 
 
 public class rooms {
     public static WebDriver driver;
     public static LoginPage loginPage;
     public static RoomPage roomsPage;
+    public static AmenitiesPage amenitiesPage;
 
     @BeforeAll
     public static void setUp(){
@@ -25,6 +32,8 @@ public class rooms {
         loginPage = new LoginPage(driver);
         loginPage.loginToApplication(LoginPage.correctEmail, LoginPage.correctPassword);
         roomsPage = new RoomPage(driver);
+        amenitiesPage = new AmenitiesPage(driver);
+
     }
 
     @AfterAll
@@ -87,6 +96,15 @@ public class rooms {
     }
 
     @Test
+    public void verifyThatTheAddedAmenitiesAreDisplayedWhileAddingARoom(){
+        RoomPage.verifyThatRoomIsOpen();
+        driver.findElement(RoomPage.addNewBtn).click();
+        WebElement amenities = driver.findElement(RoomPage.compareAmenitiesTitle);
+        String amenitiesText = amenities.getText();
+        Assertions.assertEquals(amenitiesText, ifAllAmenitiesArePresent());
+    }
+
+    @Test
     public void verifyThatTheViewBtnOpensDetailsOfRoom(){
         RoomPage.verifyThatRoomIsOpen();
         driver.findElement(RoomPage.viewRoomBtn).click();
@@ -129,5 +147,15 @@ public class rooms {
         driver.findElement(RoomPage.confirmDelete).click();
         String sureDelete = driver.findElement(RoomPage.roomToastMsg).getText();
         Assertions.assertEquals(sureDelete, "Room Deleted Successfully");
+    }
+
+    public static short ifAllAmenitiesArePresent() {
+        WebElement amenitiesList = driver.findElement(RoomPage.compareAmenitiesTitle);
+        String options = amenitiesList.getText();
+        String actualOptions = new ArrayList<>().toString();
+        for (WebElement option : options) {
+            option.getText().matches(actualOptions);
+        }
+        return 0;
     }
 }

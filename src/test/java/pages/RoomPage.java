@@ -32,6 +32,8 @@ public class RoomPage {
     public static By deleteRoomBtn = By.xpath("//*[@id=\"DataTables_Table_0\"]/tbody/tr[3]/td[5]/div/form/button");
     public static By confirmDeleteText = By.xpath("/html/body/div[5]/div/div[2]");
     public static By confirmDelete = By.xpath("/html/body/div[5]/div/div[6]/button[1]");
+    public static By compareAmenitiesTitle = By.xpath("//*[@id=\"form\"]/div[1]/section/div/div/div[5]/div/table/tbody/tr/td[1]/div/div/label/span");
+
     public static final String hotelRoom = "Rooms";
     public static final String visibleRoomType = "Deluxe Ac";
     public static final String visibleRoomStatus = "VIP";
@@ -154,5 +156,7 @@ public class RoomPage {
         editAmenities();
         driver.findElement(RoomPage.submitRoom).click();
     }
+
+
 
 }
