@@ -3,19 +3,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
 import pages.AmenitiesPage;
 import pages.LoginPage;
 import pages.RoomPage;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-
-import static pages.RoomPage.roomStatus;
-
 
 public class rooms {
     public static WebDriver driver;
@@ -54,6 +47,7 @@ public class rooms {
     public void verifyThatAllTheRoomTypesAreShownInRoomType(){
         RoomPage.verifyThatRoomIsOpen();
         driver.findElement(RoomPage.addNewBtn).click();
+        driver.findElement(RoomPage.roomTypeBox).click();
         RoomPage.ifAllRoomTypeAreShown();
     }
 
@@ -74,6 +68,7 @@ public class rooms {
     public void verifyThatRoomStatusAreShownInStatus(){
         RoomPage.verifyThatRoomIsOpen();
         driver.findElement(RoomPage.addNewBtn).click();
+        driver.findElement(RoomPage.roomStatus).click();
         RoomPage.ifAllStatusArePresent();
     }
 
@@ -99,9 +94,7 @@ public class rooms {
     public void verifyThatTheAddedAmenitiesAreDisplayedWhileAddingARoom(){
         RoomPage.verifyThatRoomIsOpen();
         driver.findElement(RoomPage.addNewBtn).click();
-        WebElement amenities = driver.findElement(RoomPage.compareAmenitiesTitle);
-        String amenitiesText = amenities.getText();
-        Assertions.assertEquals(amenitiesText, ifAllAmenitiesArePresent());
+        Assertions.assertEquals(AmenitiesPage.checkThatAllTheAmenitiesArePresent(), RoomPage.checkThatAllTheAmenitiesAreFetched() );
     }
 
     @Test
@@ -149,13 +142,5 @@ public class rooms {
         Assertions.assertEquals(sureDelete, "Room Deleted Successfully");
     }
 
-    public static short ifAllAmenitiesArePresent() {
-        WebElement amenitiesList = driver.findElement(RoomPage.compareAmenitiesTitle);
-        String options = amenitiesList.getText();
-        String actualOptions = new ArrayList<>().toString();
-        for (WebElement option : options) {
-            option.getText().matches(actualOptions);
-        }
-        return 0;
-    }
+
 }

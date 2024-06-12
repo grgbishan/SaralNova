@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AmenitiesPage {
     public static WebDriver driver;
@@ -59,6 +65,16 @@ public class AmenitiesPage {
         reqField.clear();
     }
 
+    public static List<String> checkThatAllTheAmenitiesArePresent(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement expectedOptionsElement = wait.until(ExpectedConditions.visibilityOfElementLocated(amenitiesContainer));
+        List<WebElement> options = expectedOptionsElement.findElements(amenitiesContainer);
+        List<String> amenitiesTitle = new ArrayList<>();
+        for (WebElement option : options) {
+            amenitiesTitle.add(option.getText());
+        }
+        return amenitiesTitle;
+    }
 
 
 }

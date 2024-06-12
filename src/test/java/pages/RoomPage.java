@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class RoomPage {
     public static By deleteRoomBtn = By.xpath("//*[@id=\"DataTables_Table_0\"]/tbody/tr[3]/td[5]/div/form/button");
     public static By confirmDeleteText = By.xpath("/html/body/div[5]/div/div[2]");
     public static By confirmDelete = By.xpath("/html/body/div[5]/div/div[6]/button[1]");
-    public static By compareAmenitiesTitle = By.xpath("//*[@id=\"form\"]/div[1]/section/div/div/div[5]/div/table/tbody/tr/td[1]/div/div/label/span");
+    public static By containerAmenityBox = By.xpath("//*[@id=\"form\"]/div[1]/section/div/div/div[5]");
 
     public static final String hotelRoom = "Rooms";
     public static final String visibleRoomType = "Deluxe Ac";
@@ -56,22 +58,36 @@ public class RoomPage {
         Assertions.assertEquals(expectedRoom, hotelRoom);
     }
 
-    public static void ifAllRoomTypeAreShown(){
+    public static void ifAllRoomTypeAreShown() {
         WebElement roomTypeDropDown = driver.findElement(roomTypeBox);
         Select roomType = new Select(roomTypeDropDown);
         List<WebElement> options = roomType.getOptions();
         List<String> actualOptions = new ArrayList<>();
-        for(WebElement option:options){
+        for (WebElement option : options) {
             actualOptions.add(option.getText());
         }
-        List<String> expectedOptions = List.of("Premium", "Deluxe Suite", "Deluxe Ac", "Deluxe Nonac");
+        List<String> expectedOptions = getExpectedRoomTypeOptions();
         boolean allOptionsPresent = actualOptions.containsAll(expectedOptions);
         if (allOptionsPresent) {
             System.out.println("All expected options are present in the dropdown.");
         } else {
             System.out.println("Some expected options are missing in the dropdown.");
         }
+
     }
+
+    private static List<String> getExpectedRoomTypeOptions() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement expectedOptionsElement = wait.until(ExpectedConditions.visibilityOfElementLocated(roomTypeBox));
+
+        List<WebElement> options = expectedOptionsElement.findElements(roomTypeBox);
+        List<String> expectedOptions = new ArrayList<>();
+        for (WebElement option : options) {
+            expectedOptions.add(option.getText());
+        }
+        return expectedOptions;
+    }
+
 
     public static void selectRoomType(){
         WebElement roomTypeDropDown = driver.findElement(roomTypeBox);
@@ -88,13 +104,26 @@ public class RoomPage {
         for(WebElement option:options){
             actualOptions.add(option.getText());
         }
-        List<String> expectedOptions = List.of("Availabe", "Cleaning", "Maintenance", "Unavailable", "Out Of Order", "VIP", "Check-out");
+        List<String> expectedOptions = getExpectedStatusOptions();
+
         boolean allOptionsPresent = actualOptions.containsAll(expectedOptions);
         if (allOptionsPresent) {
             System.out.println("All expected options are present in the dropdown.");
         } else {
             System.out.println("Some expected options are missing in the dropdown.");
         }
+    }
+
+    private static List<String> getExpectedStatusOptions() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement expectedOptionsElement = wait.until(ExpectedConditions.visibilityOfElementLocated(roomStatus));
+
+        List<WebElement> options = expectedOptionsElement.findElements(roomStatus);
+        List<String> expectedOptions = new ArrayList<>();
+        for (WebElement option : options) {
+            expectedOptions.add(option.getText());
+        }
+        return expectedOptions;
     }
 
     public static void selectStatus(){
@@ -157,6 +186,17 @@ public class RoomPage {
         driver.findElement(RoomPage.submitRoom).click();
     }
 
+    public static List<String> checkThatAllTheAmenitiesAreFetched(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement expectedOptionsElement = wait.until(ExpectedConditions.visibilityOfElementLocated(containerAmenityBox));
+
+        List<WebElement> options = expectedOptionsElement.findElements(containerAmenityBox);
+        List<String> expectedOptions = new ArrayList<>();
+        for (WebElement option : options) {
+            expectedOptions.add(option.getText());
+        }
+        return expectedOptions;
+    }
 
 
 }
