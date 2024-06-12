@@ -10,7 +10,7 @@ import pages.LoginPage;
 
 import java.time.Duration;
 
-public class dashboard {
+public class dashboardTests {
     public static WebDriver driver;
     public static LoginPage dashboardPage;
     public static final String actualName = "Forestway";

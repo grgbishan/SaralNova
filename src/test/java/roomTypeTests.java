@@ -6,7 +6,7 @@ import pages.RoomTypePage;
 import pages.LoginPage;
 import java.time.Duration;
 
-public class roomType {
+public class roomTypeTests {
     public static WebDriver driver;
     public static LoginPage loginPage;
     public static RoomTypePage addRoomTp;

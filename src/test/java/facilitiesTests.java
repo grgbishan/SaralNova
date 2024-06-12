@@ -11,7 +11,7 @@ import java.time.Duration;
 
 import static pages.FacilitiesPage.*;
 
-public class facilities {
+public class facilitiesTests {
     public static WebDriver driver;
     public static FacilitiesPage facilities;
     public static LoginPage loginPage;

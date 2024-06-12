@@ -10,7 +10,7 @@ import pages.RoomPage;
 
 import java.time.Duration;
 
-public class rooms {
+public class roomsTests {
     public static WebDriver driver;
     public static LoginPage loginPage;
     public static RoomPage roomsPage;

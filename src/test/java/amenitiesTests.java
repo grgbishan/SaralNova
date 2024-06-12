@@ -11,7 +11,7 @@ import java.time.Duration;
 
 import static pages.AmenitiesPage.*;
 
-public class amenities {
+public class amenitiesTests {
     public static WebDriver driver;
     public static LoginPage loginPage;
     public static AmenitiesPage amenitiesPage;
