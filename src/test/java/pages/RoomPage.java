@@ -67,12 +67,12 @@ public class RoomPage {
             actualOptions.add(option.getText());
         }
         List<String> expectedOptions = getExpectedRoomTypeOptions();
-        boolean allOptionsPresent = actualOptions.containsAll(expectedOptions);
-        if (allOptionsPresent) {
-            System.out.println("All expected options are present in the dropdown.");
-        } else {
-            System.out.println("Some expected options are missing in the dropdown.");
-        }
+            boolean allOptionsPresent = actualOptions.containsAll(expectedOptions);
+            if (allOptionsPresent) {
+                System.out.println("All expected options are present in the dropdown.");
+            } else {
+                System.out.println("Some expected options are missing in the dropdown.");
+            }
 
     }
 

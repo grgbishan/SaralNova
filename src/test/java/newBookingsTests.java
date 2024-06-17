@@ -1,19 +1,22 @@
+import jdk.jfr.Event;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.LoginPage;
 import pages.NewBookingsPage;
+import pages.RoomPage;
 
 import java.time.Duration;
 
 import static pages.NewBookingsPage.*;
 
 
-public class newBookings {
+public class newBookingsTests {
     public static WebDriver driver;
     public static LoginPage loginpage;
     public static NewBookingsPage newBooking;
@@ -38,7 +41,7 @@ public class newBookings {
     public void verifyThatRoomTypeIsSelected(){
         verifyThatNewBookingsIsOpen();
         NewBookingsPage.selectRoomType();
-        Assertions.assertEquals("Deluxe Ac", "Deluxe Ac");
+        Assertions.assertEquals(RoomPage.visibleRoomType, "Deluxe Ac");
     }
 
 
@@ -50,19 +53,11 @@ public class newBookings {
     }
 
     @Test
-    public void verifyThatTheDateDisplaysErrorMsgIfTheDaeIsEmpty() {
+    public void verifyThatTheDateDisplaysErrorMsgIfTheDateIsEmpty() {
         verifyThatNewBookingsIsOpen();
         driver.findElement(newBookingSearch).click();
-        String errorMsg = driver.findElement(NewBookingsPage.guestCountErrorMsg).getText();
+        String errorMsg = driver.findElement(NewBookingsPage.dateErrorMsg).getText();
         Assertions.assertEquals(errorMsg, "The date range field is required.");
-    }
-
-    @Test
-    public void verifyThatTheDateIsSelected(){
-        verifyThatNewBookingsIsOpen();
-        WebElement dateInput = driver.findElement(newBookingDate);
-        dateInput.sendKeys(checkInOutDate);
-        Assertions.assertEquals(checkInOutDate, "2024/06/05 - 2024/06/10");
     }
 
     @Test
@@ -71,4 +66,30 @@ public class newBookings {
         WebElement guestCount = driver.findElement(newBookingGuestCount);
         Assertions.assertNotNull(guestCount);
     }
+
+    @Test
+    public void verifyThatTheCalenderDisplaysDateFromPresentTime(){
+        verifyThatNewBookingsIsOpen();
+        driver.findElement(newBookingDate).click();
+        String calenderMonthYear = driver.findElement(monthYear).getText();
+        Assertions.assertEquals(currentMonthYear, calenderMonthYear);
+    }
+
+    @Test
+    public void verifyThatTheSearchButtonDisplaysTheRoomWithoutRoomType() throws InterruptedException {
+        verifyThatNewBookingsIsOpen();
+        WebElement dateInput = driver.findElement(newBookingDate);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value='2025/01/08 - 2025/01/14'", dateInput);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", dateInput);
+        Thread.sleep(2000);
+        driver.findElement(newBookingSearch).click();
+        Thread.sleep(3000);
+        String bookingDetails = driver.findElement(availableRoomsText).getText();
+        Assertions.assertEquals("Available Rooms",bookingDetails);
+    }
+
+
+
+
+
 }
