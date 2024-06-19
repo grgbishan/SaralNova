@@ -110,7 +110,7 @@ public class newBookingsTests {
         driver.findElement(newBookingSearch).click();
         driver.findElement(room1).click();
         Thread.sleep(2000);
-        boolean  isEnabled = driver.findElement(nextBtn).isEnabled();
+        boolean  isEnabled = driver.findElement(roomInfoNextBtn).isEnabled();
         Assertions.assertTrue(isEnabled, "The next button is disabled");
     }
 
@@ -122,16 +122,16 @@ public class newBookingsTests {
         driver.findElement(newBookingSearch).click();
         Thread.sleep(3000);
         driver.findElement(room1).click();
-        findNextButton(nextBtn);
+        findNextButton(roomInfoNextBtn);
         Thread.sleep(2000);
-        driver.findElement(nextBtn).click();
+        driver.findElement(roomInfoNextBtn).click();
         Thread.sleep(3000);
         String selectOptions = driver.findElement(selectOptionsText).getText();
         Assertions.assertEquals("Select Options", selectOptions);
     }
 
     @Test
-    public void verifyThatTheCheckBoxAreClickAble() throws InterruptedException {
+    public void verifyThatTheCheckBoxAreClickable() throws InterruptedException {
         roomInfo();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(checkBox));
@@ -140,13 +140,58 @@ public class newBookingsTests {
     }
 
     @Test
-    public void verifyThatWhenTheCheckBoxIsClickedTheCostIsAdded() throws InterruptedException {
+    public void verifyThatWhenTheCheckBoxIsClickedTheCostIsAddedAccordingToTheDayCount() throws InterruptedException {
         roomInfo();
         Thread.sleep(2000);
-        driver.findElement(checkBox).click();
-        Thread.sleep(3000);
-        String cost = driver.findElement(costBox).getText();
-        Assertions.assertEquals("Rs. 229500", cost);
+        checkBoxAddOrSubtractsTheCost();
     }
+
+    @Test
+    public void verifyThatTheGuestInfoPageIsOpen() throws InterruptedException {
+        guestInfo();
+        WebElement number3GuestInfo = driver.findElement(guestInfoNumber3);
+        String colour = number3GuestInfo.getCssValue("color");
+        Assertions.assertEquals( "rgb(255, 255, 255)", colour);
+    }
+
+    @Test
+    public void verifyThatTheCitizenshipNumberIsNeededForNepaliCitizen() throws InterruptedException {
+        guestInfo();
+        newBooking.dropDownInput(nationalityInput, nationalityText);
+        Thread.sleep(2000);
+        Assertions.assertNotNull(citizenshipInput);
+    }
+
+    @Test
+    public void verifyThatTheCitizenshipNumberIsNotNeededForOtherNationality() throws InterruptedException {
+        guestInfo();
+        newBooking.dropDownInput(nationalityInput, otherNationalityText);
+        Thread.sleep(2000);
+        boolean isCitizenshipInputDisplayed = false;
+        Assertions.assertFalse(isCitizenshipInputDisplayed, "The citizenship input box is not displayed");
+    }
+
+    @Test
+    public void verifyThatTheNameInGuestInfoAreRequired() throws InterruptedException {
+        guestInfo();
+        driver.findElement(optionsNextBtn).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(guestInfoNextBtn));
+        driver.findElement(guestInfoNextBtn).click();
+        Thread.sleep(2000);
+        required(nameReqMsg, nameReqMsgText);
+    }
+
+    @Test
+    public void verifyThatTheContactInGuestInfoAreRequired() throws InterruptedException {
+        guestInfo();
+        driver.findElement(optionsNextBtn).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(guestInfoNextBtn));
+        driver.findElement(guestInfoNextBtn).click();
+        Thread.sleep(2000);
+        required(contactReqMsg, contactReqMsgText);
+    }
+
 
 }

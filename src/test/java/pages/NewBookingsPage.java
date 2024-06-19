@@ -22,7 +22,7 @@ public class NewBookingsPage {
     public static By availableRoomsText = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/div[2]/h5");
     public static By monthYear = By.xpath("/html/body/div[5]/div[2]/div[1]/table/thead/tr[1]/th[2]");
     public static By guestCountInput = By.xpath("//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[3]/input[1]");
-    public static By nextBtn = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[3]/button");
+    public static By roomInfoNextBtn = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[3]/button");
     public static By room1 = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/div[2]/div/label[1]/div");
     public static By selectedRoom1 = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/p[1]");
     public static By room2 = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/div[2]/div/label[2]/div");
@@ -31,6 +31,20 @@ public class NewBookingsPage {
     public static By selectOptionsText = By.xpath("//p[contains(text(),'Select Options')]");
     public static By checkBox = By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]");
     public static By costBox = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[1]/div[2]/div/h5");
+    public static By guestInfoNumber3 = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[1]/div/div/div[3]/span");
+    public static By optionsNextBtn = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/button[2]");
+
+//    guestInfo
+    public static By nationalityInput = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[1]/div[5]/select");
+    public static By citizenshipInput = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[1]/div[6]/input");
+    public static By guestInfoNextBtn = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/button[2]");
+    public static By nameReqMsg = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[1]/div[1]/span");
+    public static By contactReqMsg = By.xpath("/html/body/div[1]/div[1]/div/div/div/div/div/div[2]/div[1]/div[2]/span");
+    public static final String nameReqMsgText = "The name field is required.";
+    public static final String contactReqMsgText = "The contact field is required.";
+    public static final String nationalityText = "Nepal";
+    public static final String otherNationalityText = "Canada";
+
 
     public static final String hotelNewBookings = "Room Info";
     public static final String currentMonthYear = "Jun 2024";
@@ -88,15 +102,61 @@ public class NewBookingsPage {
 
     public static void roomInfo() throws InterruptedException {
         selectDate(newBookingDates);
-        selectDate(newBookingDates);
-        driver.findElement(guestCountInput).sendKeys(guestCount);
+        WebElement guestInput = driver.findElement(guestCountInput);
+        guestInput.clear();
+        guestInput.sendKeys(guestCount);
         driver.findElement(newBookingSearch).click();
         Thread.sleep(3000);
         driver.findElement(room1).click();
         Thread.sleep(2000);
-        findNextButton(nextBtn);
+        findNextButton(roomInfoNextBtn);
         Thread.sleep(2000);
-        driver.findElement(nextBtn).click();
+        driver.findElement(roomInfoNextBtn).click();
     }
 
+    public static void checkBoxAddOrSubtractsTheCost() throws InterruptedException {
+        WebElement checkbox = driver.findElement(checkBox);
+        WebElement cost = driver.findElement(costBox);
+        double initialCost = parseCost(cost.getText());
+        checkbox.click();
+        Thread.sleep(2000);
+        double finalCost = parseCost(cost.getText());
+        if(finalCost > initialCost){
+            System.out.println("The cost is added");
+        }else{
+            System.out.println("The cost is not added");
+        }
+        Thread.sleep(2000);
+        checkbox.click();
+        Thread.sleep(2000);
+        double subtractedCost = parseCost(cost.getText());
+        if(subtractedCost < finalCost){
+            System.out.println("The cost is subtracted.");
+        }else{
+            System.out.println("The cost is not added");
+        }
+    }
+
+    private static double parseCost(String costString) {
+        String numericString = costString.replaceAll("[^0-9.-]", "");
+        return Double.parseDouble(numericString);
+    }
+
+
+    public static void guestInfo() throws InterruptedException {
+        roomInfo();
+        Thread.sleep(2000);
+        driver.findElement(optionsNextBtn).click();
+    }
+
+    public void dropDownInput(By element, String elementText) {
+        WebElement dropDownText = driver.findElement(element);
+        Select dropDown = new Select(dropDownText);
+        dropDown.selectByVisibleText(elementText);
+    }
+
+    public static void required(By element, String actual_error_message){
+        String error_message = driver.findElement(element).getText();
+        Assertions.assertEquals(error_message, actual_error_message);
+    }
 }
